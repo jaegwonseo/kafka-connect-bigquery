@@ -219,9 +219,8 @@ public class DebeziumLogicalConverters {
     }
 
     @Override
-    public Object convert(Object kafkaConnectObject) {
-      BigDecimal bigDecimal = VariableScaleDecimal.toLogical((Struct) kafkaConnectObject);
-      return bigDecimal.doubleValue();
+    public BigDecimal convert(Object kafkaConnectObject) {
+      return VariableScaleDecimal.toLogical((Struct) kafkaConnectObject);
     }
   }
 }
