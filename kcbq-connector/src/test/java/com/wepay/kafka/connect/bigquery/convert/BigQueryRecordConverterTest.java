@@ -548,24 +548,24 @@ public class BigQueryRecordConverterTest {
   @Test
   public void testDebeziumScaleValue() {
     final String fieldName = "debeziumScaleValue";
-    //value = 2 * 0.01 = 0.02
 
-    Schema scaleValueSchema = SchemaBuilder.struct().field("scale", Schema.INT32_SCHEMA)
-        .field("value", Schema.BYTES_SCHEMA).build();
-
+    Schema scaleValueSchema = io.debezium.data.VariableScaleDecimal.schema();
     Schema recordSchema = SchemaBuilder.struct().field(fieldName, scaleValueSchema).build();
 
-    Struct scaleValue = new Struct(scaleValueSchema)
+    //value = 2 * 0.01 = 0.02
+    Struct scaleValueStruct = new Struct(io.debezium.data.VariableScaleDecimal.schema())
         .put(VariableScaleDecimal.VALUE_FIELD, new BigDecimal(2).unscaledValue().toByteArray())
         .put(VariableScaleDecimal.SCALE_FIELD, 2);
 
-    Struct connectStruct = new Struct(recordSchema)
-        .put(fieldName, scaleValue);
+    Struct connectRecordStruct = new Struct(recordSchema)
+        .put(fieldName, scaleValueStruct);
 
-    SinkRecord kafkaConnectRecord = spoofSinkRecord(recordSchema, connectStruct, false);
+    SinkRecord kafkaConnectRecord = spoofSinkRecord(recordSchema, connectRecordStruct, false);
 
     Map<String, Object> bigQueryTestRecord =
         new BigQueryRecordConverter(SHOULD_CONVERT_DOUBLE).convertRecord(kafkaConnectRecord, KafkaSchemaRecordType.VALUE);
+
+    System.out.println(bigQueryTestRecord);
   }
 
   @Test

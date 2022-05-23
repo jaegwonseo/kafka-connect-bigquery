@@ -48,6 +48,7 @@ public class DebeziumLogicalConverters {
     LogicalConverterRegistry.register(Time.SCHEMA_NAME, new TimeConverter());
     LogicalConverterRegistry.register(ZonedTimestamp.SCHEMA_NAME, new ZonedTimestampConverter());
     LogicalConverterRegistry.register(Timestamp.SCHEMA_NAME, new TimestampConverter());
+    LogicalConverterRegistry.register(io.debezium.data.VariableScaleDecimal.schema().name(), new VariableScaleDecimalConverter());
   }
 
   private static final int MICROS_IN_SEC = 1000000;
@@ -62,8 +63,8 @@ public class DebeziumLogicalConverters {
      */
     public DateConverter() {
       super(Date.SCHEMA_NAME,
-            Schema.Type.INT32,
-            LegacySQLTypeName.DATE);
+          Schema.Type.INT32,
+          LegacySQLTypeName.DATE);
     }
 
     @Override
@@ -84,8 +85,8 @@ public class DebeziumLogicalConverters {
      */
     public MicroTimeConverter() {
       super(MicroTime.SCHEMA_NAME,
-            Schema.Type.INT64,
-            LegacySQLTypeName.TIME);
+          Schema.Type.INT64,
+          LegacySQLTypeName.TIME);
     }
 
     @Override
@@ -115,8 +116,8 @@ public class DebeziumLogicalConverters {
      */
     public MicroTimestampConverter() {
       super(MicroTimestamp.SCHEMA_NAME,
-            Schema.Type.INT64,
-            LegacySQLTypeName.TIMESTAMP);
+          Schema.Type.INT64,
+          LegacySQLTypeName.TIMESTAMP);
     }
 
     @Override
@@ -146,8 +147,8 @@ public class DebeziumLogicalConverters {
      */
     public TimeConverter() {
       super(Time.SCHEMA_NAME,
-            Schema.Type.INT32,
-            LegacySQLTypeName.TIME);
+          Schema.Type.INT32,
+          LegacySQLTypeName.TIME);
     }
 
     @Override
@@ -166,8 +167,8 @@ public class DebeziumLogicalConverters {
      */
     public TimestampConverter() {
       super(Timestamp.SCHEMA_NAME,
-            Schema.Type.INT64,
-            LegacySQLTypeName.TIMESTAMP);
+          Schema.Type.INT64,
+          LegacySQLTypeName.TIMESTAMP);
     }
 
     @Override
@@ -186,8 +187,8 @@ public class DebeziumLogicalConverters {
      */
     public ZonedTimestampConverter() {
       super(ZonedTimestamp.SCHEMA_NAME,
-            Schema.Type.STRING,
-            LegacySQLTypeName.TIMESTAMP);
+          Schema.Type.STRING,
+          LegacySQLTypeName.TIMESTAMP);
     }
 
     @Override
@@ -200,6 +201,23 @@ public class DebeziumLogicalConverters {
               .append(DateTimeFormatter.ISO_TIME)
               .toFormatter();
       return bqZonedTimestampFormat.format(parsedTime);
+    }
+  }
+
+  public static class VariableScaleDecimalConverter extends LogicalTypeConverter {
+    /**
+     * Create a new ZoneTimestampConverter.
+     */
+    public VariableScaleDecimalConverter() {
+      super(io.debezium.data.VariableScaleDecimal.schema().name(),
+          Schema.Type.STRUCT,
+          LegacySQLTypeName.NUMERIC);
+    }
+
+    @Override
+    public Object convert(Object kafkaConnectObject) {
+
+      return null;
     }
   }
 }
