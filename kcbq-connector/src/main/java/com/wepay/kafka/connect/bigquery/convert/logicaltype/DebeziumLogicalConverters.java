@@ -19,8 +19,10 @@
 
 package com.wepay.kafka.connect.bigquery.convert.logicaltype;
 
+import com.google.cloud.bigquery.Field;
 import com.google.cloud.bigquery.LegacySQLTypeName;
 
+import io.debezium.data.VariableScaleDecimal;
 import io.debezium.time.Date;
 import io.debezium.time.MicroTime;
 import io.debezium.time.MicroTimestamp;
@@ -29,7 +31,9 @@ import io.debezium.time.Timestamp;
 import io.debezium.time.ZonedTimestamp;
 
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.Struct;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -216,8 +220,8 @@ public class DebeziumLogicalConverters {
 
     @Override
     public Object convert(Object kafkaConnectObject) {
-
-      return null;
+      BigDecimal bigDecimal = VariableScaleDecimal.toLogical((Struct) kafkaConnectObject);
+      return bigDecimal.doubleValue();
     }
   }
 }

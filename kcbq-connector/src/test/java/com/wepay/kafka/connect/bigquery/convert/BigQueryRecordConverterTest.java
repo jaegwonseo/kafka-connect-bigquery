@@ -565,7 +565,9 @@ public class BigQueryRecordConverterTest {
     Map<String, Object> bigQueryTestRecord =
         new BigQueryRecordConverter(SHOULD_CONVERT_DOUBLE).convertRecord(kafkaConnectRecord, KafkaSchemaRecordType.VALUE);
 
-    System.out.println(bigQueryTestRecord);
+    Map<String, Object> bigQueryExpectedRecord = new HashMap<>();
+    bigQueryExpectedRecord.put(fieldName, 0.02);
+    assertEquals(bigQueryExpectedRecord, bigQueryTestRecord);
   }
 
   @Test
